@@ -25,7 +25,6 @@ import pytest
 
 from horus_lineage.config import (
     BESIDE_THE_RUN,
-    DEFAULT_ROOT,
     ENV_COMMAND,
     ENV_DIGESTS,
     ENV_MERGE,
@@ -39,37 +38,38 @@ class TestRoot:
     Choosing the destination directory.
     """
 
-    def test_it_defaults_to_the_launch_host(
+    def test_it_defaults_to_beside_the_run(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """
-        Zero setup has to work, so an unset variable is not an error.
+        Zero setup has to work, and lineage travels with its results.
         """
         monkeypatch.delenv(ENV_ROOT, raising=False)
-        assert LineageConfig.from_env().root == DEFAULT_ROOT
-
-    def test_an_explicit_path_is_used_as_given(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
-        """
-        Pointing several hosts at one filesystem is a supported choice.
-        """
-        monkeypatch.setenv(ENV_ROOT, str(tmp_path))
-        config = LineageConfig.from_env()
-        assert config.resolve_root(Path("/somewhere/else")) == tmp_path
-
-    def test_beside_the_run_follows_the_workflow(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        """
-        Lineage travels with the results it describes.
-        """
-        monkeypatch.setenv(ENV_ROOT, BESIDE_THE_RUN)
         config = LineageConfig.from_env()
         assert config.root is None
         assert config.resolve_root(Path("/work/run")) == Path(
             "/work/run/.horus-lineage"
         )
+
+    def test_an_explicit_path_is_used_as_given(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        """
+        Purgeable scratch is the reason to send records elsewhere.
+        """
+        monkeypatch.setenv(ENV_ROOT, str(tmp_path))
+        config = LineageConfig.from_env()
+        assert config.resolve_root(Path("/somewhere/else")) == tmp_path
+
+    def test_beside_the_run_can_be_spelled_out(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """
+        The old opt-in spelling still means the default, not a
+        directory literally called ``@run``.
+        """
+        monkeypatch.setenv(ENV_ROOT, BESIDE_THE_RUN)
+        assert LineageConfig.from_env().root is None
 
     def test_an_empty_value_falls_back_to_the_default(
         self, monkeypatch: pytest.MonkeyPatch
@@ -78,7 +78,7 @@ class TestRoot:
         An exported but empty variable is not a request for the CWD.
         """
         monkeypatch.setenv(ENV_ROOT, "   ")
-        assert LineageConfig.from_env().root == DEFAULT_ROOT
+        assert LineageConfig.from_env().root is None
 
 
 class TestDigests:

@@ -45,22 +45,23 @@ python -c "from importlib.metadata import entry_points as e; print([x.name for x
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `HORUS_LINEAGE_DIR` | `~/.horus-lineage` | Where run directories are written. Set to `@run` to write under the workflow's own run directory, or to any absolute path. |
+| `HORUS_LINEAGE_DIR` | beside the run | Where run directories are written. Unset, records go under `.horus-lineage/` inside the workflow's own run directory. Set an absolute path to send them elsewhere, for instance when run directories are purgeable scratch. |
 | `HORUS_LINEAGE_DIGESTS` | on | Set to `0`, `false`, `no` or `off` to record paths and sizes without hashing. Records written this way carry no edges. |
 | `HORUS_LINEAGE_MERGE` | off | Set to `1` to fold the per-task records into a single `records.jsonl` once the run ends. Worth it at a few hundred tasks, or over a network filesystem. |
 | `HORUS_LINEAGE_COMMAND` | on | Set to `0` to leave `command` out of every record, for a workflow that passes a secret as an argument. |
 | `HORUS_LINEAGE_REPORT` | off | Set to `1` to enable `horus-lineage report`. Recording and `conformance` do not depend on it. |
 
-Writes are local only. Point `HORUS_LINEAGE_DIR` at a local filesystem and
-sync afterwards. A network mount or object store inside a middleware can
-block without raising, which stalls the task rather than failing it.
+Writes are local only. If the run directory is on a network mount or an
+object store, point `HORUS_LINEAGE_DIR` at a local filesystem and sync
+afterwards. A blocking write inside a middleware stalls the task rather
+than failing it.
 
 ## Output
 
 One directory per run, moved as a unit:
 
 ```
-~/.horus-lineage/<run-id>/
+<run-directory>/.horus-lineage/<run-id>/
   run.json          the plan, written at start, closed at the end
   definition.json   the projected workflow, digested by every task record
   workflow.yaml     source copy, when the workflow came from a file
@@ -81,7 +82,7 @@ With `HORUS_LINEAGE_MERGE=1` the parts are folded into one
 written:
 
 ```
-~/.horus-lineage/<run-id>/
+<run-directory>/.horus-lineage/<run-id>/
   run.json
   definition.json
   records.jsonl

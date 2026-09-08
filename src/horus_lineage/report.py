@@ -18,7 +18,7 @@
 """
 One page for one run: what it did, where, and what it produced.
 
-    horus-lineage report ~/.horus-lineage/<run-id> --out run.html
+    horus-lineage report <run-directory>/.horus-lineage/<run-id> --out run.html
 
 A run directory is JSON, which is the right shape for a reader and the
 wrong shape for a person deciding whether a run is worth investigating.
@@ -546,7 +546,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Render one run directory as a single HTML page.",
     )
     parser.add_argument(
-        "run_dir", help="a ~/.horus-lineage/<run-id> directory"
+        "run_dir", help="a <run-directory>/.horus-lineage/<run-id> directory"
     )
     parser.add_argument(
         "--out", default="-", help="output path, or - for stdout"
