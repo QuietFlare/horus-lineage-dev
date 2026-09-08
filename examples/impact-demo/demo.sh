@@ -12,7 +12,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
-RECORDS="${HORUS_LINEAGE_DIR:-$HOME/.horus-lineage}"
+RECORDS="${HORUS_LINEAGE_DIR:-results/.horus-lineage}"
 # Prefer the demo's own environment, so uv sync is enough and the
 # venv does not have to be activated first.
 if [ -z "${HORUS:-}" ] && [ -x .venv/bin/horus ]; then

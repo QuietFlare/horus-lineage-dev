@@ -70,9 +70,9 @@ If `horus` is not on your `PATH`:
 HORUS=.venv/bin/horus ./demo.sh
 ```
 
-The demo writes records to `~/.horus-lineage` and **deletes that directory
-first** so the baseline is clean. To keep your own records, send it
-elsewhere:
+The demo writes records to `results/.horus-lineage` and **deletes
+`results/` first** so the baseline is clean. To keep the records between
+runs, send them elsewhere:
 
 ```bash
 HORUS_LINEAGE_DIR=/tmp/demo-records ./demo.sh

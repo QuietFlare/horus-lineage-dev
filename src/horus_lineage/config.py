@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ENV_ROOT = "HORUS_LINEAGE_DIR"
-"""Where run directories are written. Accepts ``@run`` (see below)."""
+"""Where run directories are written. Unset means beside the run."""
 
 ENV_DIGESTS = "HORUS_LINEAGE_DIGESTS"
 """Set to a false-ish value to record paths and sizes but no digests."""
@@ -43,13 +43,14 @@ ENV_REPORT = "HORUS_LINEAGE_REPORT"
 
 BESIDE_THE_RUN = "@run"
 """
-``HORUS_LINEAGE_DIR=@run`` writes records under the workflow's own run
-directory instead of the launch host default, so lineage travels with the
-results it describes. Good when output directories are archived, bad when
-they are purgeable scratch.
+The default, spelled out. Records go under the workflow's own run
+directory, so lineage travels with the results it describes. Set
+``HORUS_LINEAGE_DIR`` to an absolute path instead when run directories
+are purgeable scratch.
 """
 
-DEFAULT_ROOT = Path.home() / ".horus-lineage"
+RUN_SUBDIRECTORY = ".horus-lineage"
+"""Where records sit inside the run directory."""
 
 _FALSE = frozenset({"0", "false", "no", "off"})
 
@@ -87,11 +88,10 @@ class LineageConfig:
     @classmethod
     def from_env(cls) -> "LineageConfig":
         """
-        Read settings from the environment, falling back to the launch
-        host default.
+        Read settings from the environment, falling back to beside the run.
         """
         raw = os.environ.get(ENV_ROOT, "").strip()
-        root = None if raw == BESIDE_THE_RUN else Path(raw or DEFAULT_ROOT)
+        root = None if raw in ("", BESIDE_THE_RUN) else Path(raw)
         return cls(
             root=root,
             digests=cls._flag(ENV_DIGESTS, True),
@@ -106,7 +106,7 @@ class LineageConfig:
         """
         if self.root is not None:
             return self.root
-        return run_directory / ".horus-lineage"
+        return run_directory / RUN_SUBDIRECTORY
 
     @staticmethod
     def _flag(name: str, default: bool) -> bool:

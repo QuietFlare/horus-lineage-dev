@@ -12,7 +12,7 @@ plan when files are moved between run directories.
 
 The unit of storage and distribution is the run directory:
 
-    ~/.horus-lineage/<run>/
+    <run-directory>/.horus-lineage/<run>/
       run.json          the plan, written at run start
       definition.json   the projected workflow definition, digested
       workflow.yaml     source copy, when one exists
