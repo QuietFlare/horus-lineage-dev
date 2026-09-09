@@ -1,6 +1,6 @@
 # ADR 0001: Split the record into plan and observation
 
-Status: proposed, pending upstream discussion
+Status: accepted, confirmed upstream
 
 ## Context
 
