@@ -56,7 +56,7 @@ jobs:
         run: uv run make test
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: matrix.python-version == '3.13'
         with:
           name: coverage-html-report
