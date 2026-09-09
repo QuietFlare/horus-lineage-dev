@@ -1,6 +1,6 @@
 # ADR 0005: The record format, versioned as horus-lineage/v1
 
-Status: proposed, pending upstream discussion
+Status: accepted, confirmed upstream
 
 ## Context
 

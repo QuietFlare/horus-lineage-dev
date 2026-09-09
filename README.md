@@ -22,10 +22,10 @@ rests on. It is off by default, see `HORUS_LINEAGE_REPORT` below.
 ## Install
 
 ```bash
-uv pip install git+https://github.com/QuietFlare/horus-lineage@v0.1.0
+uv pip install git+https://github.com/QuietFlare/horus-lineage@v0.2.0
 ```
 
-Not on PyPI yet. Drop the `@v0.1.0` for the latest main.
+Not on PyPI yet. Drop the `@v0.2.0` for the latest main.
 
 Registration is automatic. The plugin declares four `horus.middleware.*`
 entry points, which Horus loads at boot, so there is nothing to enable and

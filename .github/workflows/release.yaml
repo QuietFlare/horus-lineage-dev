@@ -7,9 +7,15 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Trusted publishing needs the OIDC token, the version needs the tag.
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6

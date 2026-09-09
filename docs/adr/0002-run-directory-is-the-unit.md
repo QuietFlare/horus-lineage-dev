@@ -1,6 +1,6 @@
 # ADR 0002: The run directory is the unit, files reference by digest
 
-Status: proposed, pending upstream discussion
+Status: accepted, confirmed upstream. Where the directory lives is ADR 0009.
 
 ## Context
 
@@ -16,7 +16,7 @@ The unit of storage and distribution is the run directory:
       run.json          the plan, written at run start
       definition.json   the projected workflow definition, digested
       workflow.yaml     source copy, when one exists
-      <task-id>.json    one observation per task
+      <task-id>.<hash>.json    one observation per task
 
 Move it whole. Every task record carries the sha256 of the definition
 it executed under, so a missing or mismatched plan is detected rather
