@@ -273,6 +273,30 @@ class TestAFreshRun:
 
 
 @pytest.mark.usefixtures("horus_context", "init_registry")
+class TestTheSourceCopy:
+    """
+    The workflow's own YAML travels with the run.
+    """
+
+    async def test_a_yaml_workflow_is_copied_byte_for_byte(
+        self, project: Path, records_dir: Path
+    ) -> None:
+        """
+        The engine remembers the file it loaded, and the plan digests
+        the copy so a later edit to the original is detectable.
+        """
+        source = (project / "workflow.yaml").read_bytes()
+        await run_workflow(project)
+
+        run = runs(records_dir)[0]
+        assert (run / "workflow.yaml").read_bytes() == source
+        assert plan(run)["source"] == {
+            "file": "workflow.yaml",
+            "sha256": hashlib.sha256(source).hexdigest(),
+        }
+
+
+@pytest.mark.usefixtures("horus_context", "init_registry")
 class TestASkippedRun:
     """
     The common case in any workflow that is re-run.
