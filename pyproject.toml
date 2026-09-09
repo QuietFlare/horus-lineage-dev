@@ -34,7 +34,7 @@ lineage_runtime = "horus_lineage.middleware.runtime"
 [dependency-groups]
 dev = [
   "babel~=2.0",
-  "mypy~=1.19",
+  "mypy>=1.19,<3.0",
   "pre_commit~=4.0",
   "pytest~=9.0",
   "pytest-asyncio~=1.3.0",
